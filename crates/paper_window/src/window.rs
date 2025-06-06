@@ -16,12 +16,12 @@ pub struct Window {
 
 impl Window {
     pub fn new(config: WindowConfig) -> Option<Self> {
-        debug!("Creating window with config: {:?}", config);
+        debug!("Creating window with config: {config:?}");
         debug!("Initializing GLFW");
 
         let result = glfw::init(glfw::fail_on_errors);
         if let Err(e) = result {
-            error!("Failed to initialize GLFW: {}", e);
+            error!("Failed to initialize GLFW: {e}");
             return None;
         }
         let mut glfw = result.unwrap();
@@ -70,7 +70,7 @@ impl Window {
             });
         };
 
-        // Gloal GL configuration
+        // Global GL configuration
         glfw.set_swap_interval(if config.vsync { glfw::SwapInterval::Sync(1) } else { glfw::SwapInterval::None });
 
         unsafe {

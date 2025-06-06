@@ -5,8 +5,8 @@ edition = "2024"
 description = "A OpenGL based 2D application framework for Rust"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/0xkonsti/paper"
-categories = ["graphics", "engine", "open-gl", "2d", "paper"]
-keywords = ["graphics", "engine", "open-gl", "2d", "paper"]
+categories = ["graphics", "rendering"]
+keywords = ["graphics", "opengl", "paper", "rendering"]
 rust-version = "1.89.0"
 authors = ["Konstantin Opora <konstantinopora@gmail.com>"]
 

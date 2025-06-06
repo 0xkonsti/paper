@@ -8,7 +8,7 @@ use paper_math::{Transform, Vec2};
 use paper_window::{Window, WindowConfig};
 use uuid::Uuid;
 
-use crate::{Commands, CommandsTrait, EmptyApp, PaperApp, event::Event};
+use crate::{event::Event, Commands, CommandsTrait, EmptyApp, PaperApp};
 
 pub type EventCallback<T> = Box<dyn Fn(Commands, &mut T)>;
 
@@ -136,7 +136,7 @@ impl<T: PaperApp> Paper<T> {
             _ => {}
         }
 
-        debug!("Adding event callback for {:?}", event);
+        debug!("Adding event callback for {event:?}");
         self.event_callbacks.entry(event).or_default().push(Box::new(callback));
     }
 
@@ -170,12 +170,12 @@ impl<T: PaperApp> Paper<T> {
 
         for (mesh_id, mat_id, transform) in &self.entities {
             let Some(mesh) = self.meshes.get(mesh_id) else {
-                error!("Mesh with ID {} not found", mesh_id);
+                error!("Mesh with ID {mesh_id} not found");
                 continue;
             };
 
             let Some(material) = self.materials.get(mat_id) else {
-                error!("Material with ID {} not found", mat_id);
+                error!("Material with ID {mat_id} not found");
                 continue;
             };
 
@@ -212,7 +212,7 @@ impl<T: PaperApp> Paper<T> {
         let temp_callbacks = std::mem::take(&mut self.event_callbacks);
 
         if let Some(callbacks) = temp_callbacks.get(event) {
-            debug!("Handling event: {:?}", event);
+            debug!("Handling event: {event:?}");
             self.call_callbacks(callbacks, app);
         }
 
@@ -264,7 +264,7 @@ impl<T: PaperApp> CommandsTrait for Paper<T> {
     }
 
     fn trigger_event(&mut self, event: Event) {
-        debug!("Triggering event: {:?}", event);
+        debug!("Triggering event: {event:?}");
         self.triggered_events.push(event);
     }
 

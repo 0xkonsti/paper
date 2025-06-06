@@ -7,8 +7,8 @@ use uuid::Uuid;
 use super::{AttributeType, COLOR_SIZE, POSITION_SIZE};
 use crate::{Vertex, VertexAttribute};
 
-pub(crate) const F32_SIZE: u32 = std::mem::size_of::<f32>() as u32;
-pub(crate) const U32_SIZE: u32 = std::mem::size_of::<u32>() as u32;
+pub(crate) const F32_SIZE: u32 = size_of::<f32>() as u32;
+pub(crate) const U32_SIZE: u32 = size_of::<u32>() as u32;
 
 pub(crate) const BASE_STRIDE: u32 = POSITION_SIZE * F32_SIZE + COLOR_SIZE * F32_SIZE;
 

@@ -17,7 +17,6 @@ paper_math = { path = "../paper_math", version = "0.1.0-dev" }
 glfw = { workspace = true }
 glad-gl = { workspace = true }
 log = { workspace = true }
-env_logger = { workspace = true }
 
 
 [dev-dependencies]

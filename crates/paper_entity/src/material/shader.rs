@@ -41,12 +41,12 @@ impl Shader {
         let fragment_path = std::path::Path::new(fragment_path);
 
         if !vertex_path.exists() {
-            error!("Vertex shader file does not exist: {:?}", vertex_path);
+            error!("Vertex shader file does not exist: {vertex_path:?}");
             panic!();
         }
 
         if !fragment_path.exists() {
-            error!("Fragment shader file does not exist: {:?}", fragment_path);
+            error!("Fragment shader file does not exist: {fragment_path:?}");
             panic!();
         }
 
