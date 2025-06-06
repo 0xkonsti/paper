@@ -166,6 +166,6 @@ impl Drop for Shader {
 
 impl Default for Shader {
     fn default() -> Self {
-        Self::from_source(include_str!("shader/default.vert"), include_str!("shader/default.frag"))
+        Self::from_source(include_str!("shader/default/default.vert"), include_str!("shader/default/default.frag"))
     }
 }

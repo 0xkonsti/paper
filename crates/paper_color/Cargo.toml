@@ -11,6 +11,7 @@ authors = ["Konstantin Opora <konstantinopora@gmail.com>"]
 
 [dependencies]
 # ------------< paper >------------
+paper_utils = { path = "../paper_utils", version = "0.1.0-dev" }
 
 # ------------< other >------------
 

@@ -1,3 +1,7 @@
+use std::hash::{Hash, Hasher};
+
+use paper_utils::hash_f32;
+
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]
 #[repr(C)]
 pub struct Srgba {
@@ -82,6 +86,15 @@ impl Srgba {
     pub fn with_blue(mut self, b: f32) -> Self {
         self.b = b;
         self
+    }
+}
+
+impl Hash for Srgba {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        hash_f32(state, self.r);
+        hash_f32(state, self.g);
+        hash_f32(state, self.b);
+        hash_f32(state, self.a);
     }
 }
 

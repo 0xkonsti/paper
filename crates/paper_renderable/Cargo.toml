@@ -14,6 +14,7 @@ authors = ["Konstantin Opora <konstantinopora@gmail.com>"]
 paper_math = { path = "../paper_math", version = "0.1.0-dev" }
 paper_utils = { path = "../paper_utils", version = "0.1.0-dev" }
 paper_primitives = { path = "../paper_primitives", version = "0.1.0-dev" }
+paper_color = { path = "../paper_color", version = "0.1.0-dev" }
 
 # ------------< other >------------
 glad-gl = { workspace = true }
