@@ -1,14 +1,14 @@
 use std::{collections::HashMap, fmt::Debug, process::exit};
 
+use crate::{Commands, CommandsTrait, EmptyApp, PaperApp};
 use glad_gl::gl;
 use log::{debug, error};
 use paper_color::Srgba;
 use paper_entity::{Entity, Material, Mesh};
+use paper_input::Event;
 use paper_math::{Transform, Vec2};
 use paper_window::{Window, WindowConfig};
 use uuid::Uuid;
-
-use crate::{event::Event, Commands, CommandsTrait, EmptyApp, PaperApp};
 
 pub type EventCallback<T> = Box<dyn Fn(Commands, &mut T)>;
 

@@ -1,3 +1,5 @@
+use crate::{Action, Event};
+
 #[rustfmt::skip]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Key {
@@ -20,6 +22,20 @@ pub enum Key {
     RightShift, RightControl, RightAlt, RightSuper,
     Menu,
     Unknown,
+}
+
+impl Key {
+    pub fn press(self) -> Event {
+        Event::Key(self, Action::Press)
+    }
+
+    pub fn release(self) -> Event {
+        Event::Key(self, Action::Release)
+    }
+
+    pub fn repeat(self) -> Event {
+        Event::Key(self, Action::Repeat)
+    }
 }
 
 impl From<glfw::Key> for Key {

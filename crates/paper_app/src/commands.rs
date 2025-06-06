@@ -1,8 +1,7 @@
 use paper_color::Srgba;
 use paper_entity::Entity;
+use paper_input::Event;
 use paper_math::Vec2;
-
-use crate::event::Event;
 
 pub trait CommandsTrait {
     fn set_clear_color(&mut self, color: Srgba);
@@ -55,7 +54,7 @@ impl<'a> Commands<'a> {
         self.paper.trigger_event(event);
     }
 
-    pub fn trigger_events(&mut self, events: impl IntoIterator<Item = Event>) {
+    pub fn trigger_events(&mut self, events: impl IntoIterator<Item=Event>) {
         for event in events {
             self.trigger_event(event);
         }

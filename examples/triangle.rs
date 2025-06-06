@@ -10,7 +10,7 @@ fn main() {
 
     Paper::<EmptyApp>::default()
         .with_entity(triangle)
-        .with_event_callback(Event::Key(Key::Escape, Action::Press), |mut cmd, _| {
+        .with_event_callback(Key::Escape.press(), |mut cmd, _| {
             cmd.close();
         })
         .run()
