@@ -1,0 +1,22 @@
+[package]
+name = "paper_primitives"
+version = "0.1.0-dev"
+edition = "2024"
+description = "Collection of basic drawable primitives for paper"
+keywords = ["paper"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/0xkonsti/paper"
+rust-version = "1.89.0"
+authors = ["Konstantin Opora <konstantinopora@gmail.com>"]
+
+[dependencies]
+# ------------< paper >------------
+paper_math = { path = "../paper_math", version = "0.1.0-dev" }
+
+# ------------< other >------------
+
+[dev-dependencies]
+
+[lib]
+name = "paper_primitives"
+path = "src/lib.rs"

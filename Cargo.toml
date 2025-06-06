@@ -1,0 +1,55 @@
+[package]
+name = "paper"
+version = "0.1.0-dev"
+edition = "2024"
+description = "A OpenGL based 2D application framework for Rust"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/0xkonsti/paper"
+categories = ["graphics", "engine", "open-gl", "2d", "paper"]
+keywords = ["graphics", "engine", "open-gl", "2d", "paper"]
+rust-version = "1.89.0"
+authors = ["Konstantin Opora <konstantinopora@gmail.com>"]
+
+[dependencies]
+# ------------< paper >------------
+paper_math = { path = "crates/paper_math", version = "0.1.0-dev" }
+paper_utils = { path = "crates/paper_utils", version = "0.1.0-dev" }
+paper_window = { path = "crates/paper_window", version = "0.1.0-dev" }
+paper_app = { path = "crates/paper_app", version = "0.1.0-dev" }
+paper_entity = { path = "crates/paper_entity", version = "0.1.0-dev" }
+paper_input = { path = "crates/paper_input", version = "0.1.0-dev" }
+paper_color = { path = "crates/paper_color", version = "0.1.0-dev" }
+paper_primitives = { path = "crates/paper_primitives", version = "0.1.0-dev" }
+
+# ------------< other >------------
+log = { workspace = true }
+
+[dev-dependencies]
+
+[lib]
+name = "paper"
+path = "src/lib.rs"
+
+[workspace]
+resolver = "2"
+members = ["crates/*"]
+
+[workspace.lints.clippy]
+
+[workspace.lints.rust]
+
+[workspace.dependencies]
+glfw = "0.59"
+glad-gl = { path = "crates/glad-gl" }
+glam = "0.30"
+log = "0.4"
+env_logger = "0.11"
+uuid = { version = "1.11", features = ["v4"] }
+
+[[example]]
+name = "hello_paper"
+path = "examples/hello_paper.rs"
+
+[[example]]
+name = "triangle"
+path = "examples/triangle.rs"
