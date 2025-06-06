@@ -14,7 +14,7 @@ authors = ["Konstantin Opora <konstantinopora@gmail.com>"]
 paper_window = { path = "../paper_window", version = "0.1.0-dev" }
 paper_math = { path = "../paper_math", version = "0.1.0-dev" }
 paper_input = { path = "../paper_input", version = "0.1.0-dev" }
-paper_entity = { path = "../paper_entity", version = "0.1.0-dev", features = [
+paper_entity = { path = "../paper_renderable", version = "0.1.0-dev", features = [
     "internal",
 ] }
 paper_color = { path = "../paper_color", version = "0.1.0-dev" }
