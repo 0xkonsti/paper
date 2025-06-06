@@ -9,7 +9,7 @@ use paper_math::{Transform, Vec2};
 use paper_window::{Window, WindowConfig};
 use uuid::Uuid;
 
-use crate::{Commands, CommandsTrait, EmptyApp, PaperApp};
+use crate::{Commands, CommandsTrait, EmptyApp, PaperApp, camera::Camera2D};
 
 pub type EventCallback<T> = Box<dyn Fn(Commands, &mut T)>;
 
@@ -22,6 +22,8 @@ pub struct Paper<T: PaperApp = EmptyApp> {
 
     triggered_events: Vec<Event>,
     event_callbacks: HashMap<Event, Vec<EventCallback<T>>>,
+
+    camera: Camera2D,
 
     entities: Vec<(Uuid, Uuid, Transform)>, // (mesh_id, material_id, transform)
     entity_map: HashMap<Uuid, usize>, // maps entity ID to its index in the entities vector (for access from outside)
@@ -37,7 +39,7 @@ impl<T: PaperApp> Paper<T> {
     pub fn new(window_config: WindowConfig) -> Self {
         let _ = env_logger::Builder::from_default_env().filter_level(log::LevelFilter::Debug).try_init();
 
-        let Some(window) = Window::new(window_config) else {
+        let Some(window) = Window::new(&window_config) else {
             error!("Failed to create window");
             exit(1);
         };
@@ -51,6 +53,12 @@ impl<T: PaperApp> Paper<T> {
 
             triggered_events: Vec::new(),
             event_callbacks: HashMap::new(),
+
+            camera: Camera2D::new(
+                Transform::default(),
+                1.0,
+                Vec2::new(window_config.width as f32, window_config.height as f32),
+            ),
 
             entities: Vec::new(),
             entity_map: HashMap::new(),
@@ -125,6 +133,15 @@ impl<T: PaperApp> Paper<T> {
         entity_id
     }
 
+    pub fn set_camera(&mut self, camera: Camera2D) {
+        self.camera = camera;
+    }
+
+    pub fn with_camera(mut self, camera: Camera2D) -> Self {
+        self.set_camera(camera);
+        self
+    }
+
     pub fn with_entity(mut self, entity: Entity, id: Option<&mut Uuid>) -> Self {
         let new_id = self.add_entity(entity);
         if let Some(id) = id {
@@ -193,8 +210,8 @@ impl<T: PaperApp> Paper<T> {
                 continue;
             };
 
-            material.apply(transform);
-            mesh.draw()
+            material.apply(transform, &self.camera.projection_matrix());
+            mesh.draw();
         }
     }
 
@@ -288,5 +305,13 @@ impl<T: PaperApp> CommandsTrait for Paper<T> {
 
     fn get_delta_time(&self) -> f64 {
         self.delta_time
+    }
+
+    fn camera(&self) -> &Camera2D {
+        &self.camera
+    }
+
+    fn camera_mut(&mut self) -> &mut Camera2D {
+        &mut self.camera
     }
 }

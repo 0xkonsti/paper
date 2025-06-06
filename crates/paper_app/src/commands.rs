@@ -3,6 +3,8 @@ use paper_entity::Entity;
 use paper_input::Event;
 use paper_math::Vec2;
 
+use crate::Camera2D;
+
 pub trait CommandsTrait {
     fn set_clear_color(&mut self, color: Srgba);
 
@@ -19,6 +21,10 @@ pub trait CommandsTrait {
     fn get_mouse_position(&self) -> Vec2;
 
     fn get_delta_time(&self) -> f64;
+
+    fn camera(&self) -> &Camera2D;
+
+    fn camera_mut(&mut self) -> &mut Camera2D;
 }
 
 pub struct Commands<'a> {
@@ -66,5 +72,13 @@ impl<'a> Commands<'a> {
 
     pub fn get_delta_time(&self) -> f64 {
         self.paper.get_delta_time()
+    }
+
+    pub fn camera(&self) -> &Camera2D {
+        self.paper.camera()
+    }
+
+    pub fn camera_mut(&mut self) -> &mut Camera2D {
+        self.paper.camera_mut()
     }
 }

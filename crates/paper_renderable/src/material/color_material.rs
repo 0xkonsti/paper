@@ -1,10 +1,10 @@
 use paper_color::Srgba;
-use paper_math::Transform;
+use paper_math::{Mat4, Transform};
 use paper_utils::calculate_hash;
 use uuid::Uuid;
 
 use crate::{
-    Material, Shader, ShaderUniform,
+    Material, PROJECTION_UNIFORM, Shader, ShaderUniform,
     material::{COLOR_MATERIAL_ID, COLOR_UNIFORM, TRANSFORM_UNIFORM},
 };
 
@@ -42,8 +42,9 @@ impl Material for ColorMaterial {
         self.id
     }
 
-    fn apply(&self, transform: &Transform) {
+    fn apply(&self, transform: &Transform, projection: &Mat4) {
         self.shader.use_program();
+        self.shader.set_uniform(PROJECTION_UNIFORM, &ShaderUniform::Mat4(projection.to_cols_array()));
         self.shader.set_uniform(TRANSFORM_UNIFORM, &ShaderUniform::Mat4(transform.flatten()));
         self.shader.set_uniform(COLOR_UNIFORM, &ShaderUniform::Vec4(self.color.to_array()));
     }

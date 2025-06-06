@@ -4,12 +4,14 @@ mod commands;
 mod paper;
 
 pub use app::*;
+pub use camera::*;
 pub use commands::*;
 pub use paper::*;
 
 pub mod prelude {
     pub use crate::{
         app::{EmptyApp, PaperApp},
+        camera::Camera2D,
         commands::Commands,
         paper::Paper,
     };

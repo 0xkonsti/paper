@@ -15,7 +15,7 @@ pub struct Window {
 }
 
 impl Window {
-    pub fn new(config: WindowConfig) -> Option<Self> {
+    pub fn new(config: &WindowConfig) -> Option<Self> {
         debug!("Creating window with config: {config:?}");
         debug!("Initializing GLFW");
 

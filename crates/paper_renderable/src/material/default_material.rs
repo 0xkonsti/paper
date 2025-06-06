@@ -1,9 +1,10 @@
 use std::hash::Hash;
 
-use paper_math::Transform;
+use paper_math::{Mat4, Transform};
 use uuid::Uuid;
 
 use super::{DEFAULT_MATERIAL_ID, Material, Shader, ShaderUniform, TRANSFORM_UNIFORM};
+use crate::PROJECTION_UNIFORM;
 
 #[derive(Debug, Clone)]
 pub struct DefaultMaterial {
@@ -39,8 +40,9 @@ impl Material for DefaultMaterial {
         self.id
     }
 
-    fn apply(&self, transform: &Transform) {
+    fn apply(&self, transform: &Transform, projection: &Mat4) {
         self.shader.use_program();
+        self.shader.set_uniform(PROJECTION_UNIFORM, &ShaderUniform::Mat4(projection.to_cols_array()));
         self.shader.set_uniform(TRANSFORM_UNIFORM, &ShaderUniform::Mat4(transform.flatten()));
     }
 }

@@ -1,7 +1,7 @@
 use std::hash::{Hash, Hasher};
 
 use paper_color::Srgba;
-use paper_math::Transform;
+use paper_math::{Mat4, Transform};
 use uuid::Uuid;
 
 use super::DefaultMaterial;
@@ -10,6 +10,7 @@ use crate::material::color_material::ColorMaterial;
 pub(crate) const DEFAULT_MATERIAL_ID: Uuid = Uuid::nil();
 pub(crate) const COLOR_MATERIAL_ID: Uuid = Uuid::from_u128(1);
 
+pub(crate) const PROJECTION_UNIFORM: &str = "uProjection";
 pub(crate) const TRANSFORM_UNIFORM: &str = "uModel";
 pub(crate) const COLOR_UNIFORM: &str = "uColor";
 
@@ -40,7 +41,7 @@ impl MaterialType {
 
 pub trait Material: std::fmt::Debug {
     fn id(&self) -> Uuid;
-    fn apply(&self, transform: &Transform);
+    fn apply(&self, transform: &Transform, projection: &Mat4);
 }
 
 impl Hash for Box<dyn Material> {
