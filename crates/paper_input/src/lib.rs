@@ -1,7 +1,7 @@
 mod action;
+mod event;
 mod key;
 mod mouse;
-mod event;
 
 pub use action::*;
 pub use event::*;

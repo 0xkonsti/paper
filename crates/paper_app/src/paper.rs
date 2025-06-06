@@ -1,6 +1,5 @@
 use std::{collections::HashMap, fmt::Debug, process::exit};
 
-use crate::{Commands, CommandsTrait, EmptyApp, PaperApp};
 use glad_gl::gl;
 use log::{debug, error};
 use paper_color::Srgba;
@@ -9,6 +8,8 @@ use paper_input::Event;
 use paper_math::{Transform, Vec2};
 use paper_window::{Window, WindowConfig};
 use uuid::Uuid;
+
+use crate::{Commands, CommandsTrait, EmptyApp, PaperApp};
 
 pub type EventCallback<T> = Box<dyn Fn(Commands, &mut T)>;
 
@@ -23,6 +24,7 @@ pub struct Paper<T: PaperApp = EmptyApp> {
     event_callbacks: HashMap<Event, Vec<EventCallback<T>>>,
 
     entities: Vec<(Uuid, Uuid, Transform)>, // (mesh_id, material_id, transform)
+    entity_map: HashMap<Uuid, usize>, // maps entity ID to its index in the entities vector (for access from outside)
     meshes: HashMap<Uuid, Mesh>,
     materials: HashMap<Uuid, Box<dyn Material>>,
 }
@@ -51,6 +53,7 @@ impl<T: PaperApp> Paper<T> {
             event_callbacks: HashMap::new(),
 
             entities: Vec::new(),
+            entity_map: HashMap::new(),
             meshes: HashMap::new(),
             materials: HashMap::new(),
         }
@@ -91,7 +94,7 @@ impl<T: PaperApp> Paper<T> {
         app.cleanup(Commands::new(self));
     }
 
-    pub fn add_entity(&mut self, entity: Entity) {
+    pub fn add_entity(&mut self, entity: Entity) -> Uuid {
         let e_mesh = entity.mesh();
         let e_material_type = entity.material_type();
 
@@ -111,11 +114,22 @@ impl<T: PaperApp> Paper<T> {
             debug!("Added new material to Paper | Count: {}", self.materials.len());
         }
 
+        let index = self.entities.len();
+        let entity_id = Uuid::new_v4();
         self.entities.push((mesh_id, material_id, entity.transform));
+        self.entity_map.insert(entity_id, index);
+
+        debug!("Added new entity to Paper | Count: {}", self.entities.len());
+        debug!("Entity ID: {entity_id}, Mesh ID: {mesh_id}, Material ID: {material_id}");
+
+        entity_id
     }
 
-    pub fn with_entity(mut self, entity: Entity) -> Self {
-        self.add_entity(entity);
+    pub fn with_entity(mut self, entity: Entity, id: Option<&mut Uuid>) -> Self {
+        let new_id = self.add_entity(entity);
+        if let Some(id) = id {
+            *id = new_id;
+        }
         self
     }
 

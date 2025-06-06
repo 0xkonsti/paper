@@ -9,9 +9,9 @@ fn main() {
         .with_attribute(AttributeType::Color, colors);
 
     Paper::<EmptyApp>::default()
-        .with_entity(triangle)
+        .with_entity(triangle, None)
         .with_event_callback(Key::Escape.press(), |mut cmd, _| {
             cmd.close();
         })
-        .run()
+        .run();
 }

@@ -1,5 +1,6 @@
-use crate::{Action, Key, MouseButton};
 use uuid::Uuid;
+
+use crate::{Action, Key, MouseButton};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum Event {

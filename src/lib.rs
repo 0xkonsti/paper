@@ -9,3 +9,4 @@ pub use paper_math as math;
 pub use paper_primitives as primitives;
 pub use paper_utils as utils;
 pub use paper_window as window;
+pub use uuid::Uuid;

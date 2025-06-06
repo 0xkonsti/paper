@@ -23,6 +23,7 @@ paper_primitives = { path = "crates/paper_primitives", version = "0.1.0-dev" }
 
 # ------------< other >------------
 log = { workspace = true }
+uuid = { workspace = true }
 
 [dev-dependencies]
 

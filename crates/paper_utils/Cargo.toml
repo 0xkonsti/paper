@@ -13,6 +13,7 @@ authors = ["Konstantin Opora <konstantinopora@gmail.com>"]
 # ------------< paper >------------
 
 # ------------< other >------------
+uuid = { workspace = true }
 
 [dev-dependencies]
 
