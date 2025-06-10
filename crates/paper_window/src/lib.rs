@@ -5,5 +5,5 @@ pub use config::*;
 pub use window::*;
 
 pub mod prelude {
-    pub use crate::config::{WindowConfig, WindowMode};
+    pub use crate::config::{Samples, WindowConfig, WindowMode};
 }

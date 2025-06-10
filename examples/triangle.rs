@@ -1,7 +1,7 @@
-use paper::{app::enable_logging, entity::AttributeType, prelude::*};
+use paper::{app::enable_logging, prelude::*, renderable::AttributeType};
 
 fn main() {
-    enable_logging();
+    enable_logging(log::LevelFilter::Debug);
 
     let colors: Vec<f32> = flatten([RED.to_vec(), GREEN.to_vec(), BLUE.to_vec()]);
 

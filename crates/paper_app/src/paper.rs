@@ -3,9 +3,9 @@ use std::{collections::HashMap, fmt::Debug, process::exit};
 use glad_gl::gl;
 use log::{debug, error};
 use paper_color::Srgba;
-use paper_entity::{Entity, Material, Mesh};
 use paper_input::Event;
 use paper_math::{Transform, Vec2};
+use paper_renderable::{Entity, Material, Mesh};
 use paper_window::{Window, WindowConfig};
 use uuid::Uuid;
 
@@ -20,6 +20,9 @@ pub struct Paper<T: PaperApp = EmptyApp> {
     mouse_position: Vec2,
     delta_time: f64,
 
+    fixed_time_step: f64,
+    fixed_delta_time: f64,
+
     triggered_events: Vec<Event>,
     event_callbacks: HashMap<Event, Vec<EventCallback<T>>>,
 
@@ -31,8 +34,8 @@ pub struct Paper<T: PaperApp = EmptyApp> {
     materials: HashMap<Uuid, Box<dyn Material>>,
 }
 
-pub fn enable_logging() {
-    env_logger::Builder::from_default_env().filter_level(log::LevelFilter::Debug).init();
+pub fn enable_logging(level: log::LevelFilter) {
+    env_logger::Builder::from_default_env().filter_level(level).init();
 }
 
 impl<T: PaperApp> Paper<T> {
@@ -50,6 +53,9 @@ impl<T: PaperApp> Paper<T> {
 
             mouse_position: Vec2::ZERO,
             delta_time: 0.,
+
+            fixed_time_step: 1. / 24., // Default fixed time step of 24 FPS
+            fixed_delta_time: 0.,
 
             triggered_events: Vec::new(),
             event_callbacks: HashMap::new(),
@@ -75,11 +81,24 @@ impl<T: PaperApp> Paper<T> {
         let frame_time = 1. / self.max_fps.unwrap_or(60.);
         let mut last_frame = std::time::Instant::now();
         let mut delta_time = 0.;
+        let mut fixed_delta_time = 0.;
 
         while !self.window.should_close() {
             let now = std::time::Instant::now();
             delta_time += now.duration_since(last_frame).as_secs_f64();
+            fixed_delta_time += now.duration_since(last_frame).as_secs_f64();
             last_frame = now;
+
+            if fixed_delta_time >= self.fixed_time_step {
+                self.fixed_delta_time = self.fixed_time_step;
+                debug!(
+                    "Fixed update with delta time: {} | Overshoot: {}",
+                    self.fixed_delta_time,
+                    fixed_delta_time - self.fixed_time_step
+                );
+                app.fixed_update(Commands::new(self));
+                fixed_delta_time -= self.fixed_time_step;
+            }
 
             if self.max_fps.is_some() && delta_time < frame_time {
                 continue;
@@ -133,20 +152,20 @@ impl<T: PaperApp> Paper<T> {
         entity_id
     }
 
+    pub fn with_entity(mut self, entity: Entity, id: Option<&mut Uuid>) -> Self {
+        let new_id = self.add_entity(entity);
+        if let Some(id) = id {
+            *id = new_id;
+        }
+        self
+    }
+
     pub fn set_camera(&mut self, camera: Camera2D) {
         self.camera = camera;
     }
 
     pub fn with_camera(mut self, camera: Camera2D) -> Self {
         self.set_camera(camera);
-        self
-    }
-
-    pub fn with_entity(mut self, entity: Entity, id: Option<&mut Uuid>) -> Self {
-        let new_id = self.add_entity(entity);
-        if let Some(id) = id {
-            *id = new_id;
-        }
         self
     }
 
@@ -275,8 +294,17 @@ impl<T: PaperApp> CommandsTrait for Paper<T> {
         self.set_clear_color(color);
     }
 
-    fn add_entity(&mut self, entity: Entity) {
-        self.add_entity(entity);
+    fn add_entity(&mut self, entity: Entity) -> Uuid {
+        self.add_entity(entity)
+    }
+
+    fn get_transform(&self, id: &Uuid) -> Option<&Transform> {
+        Some(&self.entities[*self.entity_map.get(id)?].2)
+    }
+
+    fn get_transform_mut(&mut self, id: &Uuid) -> Option<&mut Transform> {
+        let index = self.entity_map.get(id)?;
+        Some(&mut self.entities[*index].2)
     }
 
     fn remove_entity(&mut self, entity: &Entity) {
@@ -305,6 +333,10 @@ impl<T: PaperApp> CommandsTrait for Paper<T> {
 
     fn get_delta_time(&self) -> f64 {
         self.delta_time
+    }
+
+    fn get_fixed_delta_time(&self) -> f64 {
+        self.fixed_delta_time
     }
 
     fn camera(&self) -> &Camera2D {

@@ -16,7 +16,7 @@ paper_math = { path = "crates/paper_math", version = "0.1.0-dev" }
 paper_utils = { path = "crates/paper_utils", version = "0.1.0-dev" }
 paper_window = { path = "crates/paper_window", version = "0.1.0-dev" }
 paper_app = { path = "crates/paper_app", version = "0.1.0-dev" }
-paper_entity = { path = "crates/paper_renderable", version = "0.1.0-dev" }
+paper_renderable = { path = "crates/paper_renderable", version = "0.1.0-dev" }
 paper_input = { path = "crates/paper_input", version = "0.1.0-dev" }
 paper_color = { path = "crates/paper_color", version = "0.1.0-dev" }
 paper_primitives = { path = "crates/paper_primitives", version = "0.1.0-dev" }
@@ -54,3 +54,7 @@ path = "examples/hello_paper.rs"
 [[example]]
 name = "triangle"
 path = "examples/triangle.rs"
+
+[[example]]
+name = "circle"
+path = "examples/circle.rs"

@@ -13,7 +13,7 @@ pub struct ColorMaterial {
     id: Uuid,
     color: Srgba,
 
-    shader: Shader,
+    shader: Shader, // TODO: reuse shader for all ColorMaterials (since they are the same only the uniforms changes)
 }
 
 impl ColorMaterial {

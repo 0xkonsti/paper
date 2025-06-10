@@ -14,8 +14,12 @@ authors = ["Konstantin Opora <konstantinopora@gmail.com>"]
 paper_math = { path = "../paper_math", version = "0.1.0-dev" }
 
 # ------------< other >------------
+glad-gl = { workspace = true }
 
 [dev-dependencies]
+
+[features]
+internal = []
 
 [lib]
 name = "paper_primitives"

@@ -3,7 +3,7 @@ use glfw::Context;
 use log::{debug, error, info};
 use paper_math::{UVec2, Vec2};
 
-use crate::{WindowConfig, WindowMode};
+use crate::{Samples, WindowConfig, WindowMode};
 
 #[derive(Debug)]
 pub struct Window {
@@ -29,7 +29,7 @@ impl Window {
         glfw.window_hint(glfw::WindowHint::ContextVersion(4, 6));
         glfw.window_hint(glfw::WindowHint::OpenGlProfile(glfw::OpenGlProfileHint::Core));
         glfw.window_hint(glfw::WindowHint::Resizable(config.resizable));
-        glfw.window_hint(glfw::WindowHint::Samples(Some(config.samples)));
+        glfw.window_hint(glfw::WindowHint::Samples(config.samples.to_glfw_samples()));
 
         debug!("Creating GLFW window");
 
@@ -109,5 +109,9 @@ impl Window {
         unsafe {
             gl::Clear(gl::COLOR_BUFFER_BIT);
         }
+    }
+
+    pub fn set_samples(&mut self, samples: Samples) {
+        glfw::WindowHint::Samples(samples.to_glfw_samples());
     }
 }

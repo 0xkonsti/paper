@@ -12,6 +12,18 @@ impl Camera2D {
         Self { transform, zoom, viewport }
     }
 
+    pub fn move_by(&mut self, delta: Vec2) {
+        self.transform.translation += delta.extend(0.0);
+    }
+
+    pub fn move_vertically(&mut self, delta: f32) {
+        self.transform.translation.y += delta;
+    }
+
+    pub fn move_horizontally(&mut self, delta: f32) {
+        self.transform.translation.x += delta;
+    }
+
     pub fn with_transform(mut self, transform: Transform) -> Self {
         self.transform = transform;
         self

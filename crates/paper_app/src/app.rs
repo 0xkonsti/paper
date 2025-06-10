@@ -5,6 +5,11 @@ use crate::commands::Commands;
 pub trait PaperApp: Default {
     fn setup(&mut self, cmd: Commands);
     fn update(&mut self, cmd: Commands);
+
+    fn fixed_update(&mut self, _cmd: Commands) {
+        info!("No default fixed update defined.");
+    }
+
     fn cleanup(&mut self, _cmd: Commands) {
         info!("Closing Paper App! No default cleanup defined.");
     }

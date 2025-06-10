@@ -25,6 +25,8 @@ pub struct Mesh {
     indices: Option<Vec<u32>>,
     stride: u32,
 
+    draw_mode: gl::types::GLenum,
+
     build: bool,
 }
 
@@ -70,6 +72,11 @@ impl Mesh {
     pub fn with_indices(mut self, indices: Vec<u32>) -> Self {
         self.set_indices(indices);
         self
+    }
+
+    #[cfg(feature = "internal")]
+    pub fn set_draw_mode(&mut self, mode: gl::types::GLenum) {
+        self.draw_mode = mode;
     }
 
     #[cfg(feature = "internal")]
@@ -153,9 +160,9 @@ impl Mesh {
         unsafe {
             gl::BindVertexArray(self.vao);
             if let Some(indices) = self.indices.as_ref() {
-                gl::DrawElements(gl::TRIANGLES, indices.len() as i32, gl::UNSIGNED_INT, std::ptr::null());
+                gl::DrawElements(self.draw_mode, indices.len() as i32, gl::UNSIGNED_INT, std::ptr::null());
             } else {
-                gl::DrawArrays(gl::TRIANGLES, 0, self.vertices.len() as i32);
+                gl::DrawArrays(self.draw_mode, 0, self.vertices.len() as i32);
             }
             gl::BindVertexArray(0);
         }
@@ -175,6 +182,8 @@ impl Default for Mesh {
             indices: None,
             attributes: Vec::new(),
             stride: 0,
+
+            draw_mode: gl::TRIANGLES,
 
             build: false,
         };

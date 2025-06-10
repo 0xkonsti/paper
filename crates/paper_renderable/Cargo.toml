@@ -1,5 +1,5 @@
 [package]
-name = "paper_entity"
+name = "paper_renderable"
 version = "0.1.0-dev"
 edition = "2024"
 description = "Drawable entities for paper"
@@ -13,7 +13,9 @@ authors = ["Konstantin Opora <konstantinopora@gmail.com>"]
 # ------------< paper >------------
 paper_math = { path = "../paper_math", version = "0.1.0-dev" }
 paper_utils = { path = "../paper_utils", version = "0.1.0-dev" }
-paper_primitives = { path = "../paper_primitives", version = "0.1.0-dev" }
+paper_primitives = { path = "../paper_primitives", version = "0.1.0-dev", features = [
+    "internal",
+] }
 paper_color = { path = "../paper_color", version = "0.1.0-dev" }
 
 # ------------< other >------------
@@ -28,5 +30,5 @@ internal = []
 
 
 [lib]
-name = "paper_entity"
+name = "paper_renderable"
 path = "src/lib.rs"

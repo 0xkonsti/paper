@@ -42,6 +42,21 @@ impl Transform {
         self
     }
 
+    pub fn set_translation(&mut self, translation: Vec3) -> &mut Self {
+        self.translation = translation;
+        self
+    }
+
+    pub fn set_rotation(&mut self, rotation: Quat) -> &mut Self {
+        self.rotation = rotation;
+        self
+    }
+
+    pub fn set_scale(&mut self, scale: Vec3) -> &mut Self {
+        self.scale = scale;
+        self
+    }
+
     pub fn matrix(&self) -> Mat4 {
         Mat4::from_scale_rotation_translation(self.scale, self.rotation, self.translation)
     }

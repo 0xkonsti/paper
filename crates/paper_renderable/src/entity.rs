@@ -19,7 +19,10 @@ impl Entity {
     }
 
     pub fn from_shape_2d(shape: Shape2D) -> Self {
-        let mesh = Mesh::new().with_attribute(AttributeType::Position, shape.vertices()).with_indices(shape.indices());
+        let mut mesh =
+            Mesh::new().with_attribute(AttributeType::Position, shape.vertices()).with_indices(shape.indices());
+
+        mesh.set_draw_mode(shape.draw_mode());
 
         Self { mesh, material_type: MaterialType::Default, material: None, transform: shape.transform() }
     }
