@@ -1,3 +1,5 @@
+use std::hash::Hash;
+
 use glad_gl::gl;
 
 use crate::{AttributeType, COLOR_SIZE, POSITION_SIZE, Vertex, VertexAttribute};
@@ -143,5 +145,16 @@ impl InternalMesh {
             }
             gl::BindVertexArray(0); // Unbind the VAO
         }
+    }
+}
+
+impl Eq for Mesh {}
+
+impl Hash for Mesh {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.vertices.hash(state);
+        self.attributes.hash(state);
+        self.indices.hash(state);
+        self.stride.hash(state);
     }
 }

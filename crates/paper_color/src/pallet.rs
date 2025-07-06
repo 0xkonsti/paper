@@ -23,3 +23,6 @@ pub const PINK_RED: Srgba = Srgba::hex(0xE6255B);
 
 /// blueish purple color.
 pub const BLUE_PURPLE: Srgba = Srgba::hex(0x7B1CFF);
+
+/// Lime green color.
+pub const LIME_GREEN: Srgba = Srgba::hex(0x77E835);

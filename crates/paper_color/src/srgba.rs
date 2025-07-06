@@ -42,6 +42,10 @@ impl Srgba {
         Self::rgb_u8(r, g, b)
     }
 
+    pub fn as_array(&self) -> [f32; 4] {
+        [self.r, self.g, self.b, self.a]
+    }
+
     /// Into linear space [gamma correction](https://en.wikipedia.org/wiki/Gamma_correction).
     pub fn gamma_correct(value: f32) -> f32 {
         if value <= 0.0 {

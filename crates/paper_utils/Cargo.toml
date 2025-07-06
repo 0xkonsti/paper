@@ -13,6 +13,7 @@ authors = ["Konstantin Opora <konstantinopora@gmail.com>"]
 # ------------< paper >------------
 
 # ------------< other >------------
+ahash = "0.8"
 
 [dev-dependencies]
 

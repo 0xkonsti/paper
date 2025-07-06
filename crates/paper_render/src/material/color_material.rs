@@ -3,22 +3,22 @@ use hashbrown::HashMap;
 use crate::{Material, Shader, ShaderUniform, Uniform};
 
 #[derive(Debug, Clone, PartialEq, Default)]
-pub struct DefaultMaterial {
+pub struct ColorMaterial {
     shader:   Shader,
     uniforms: HashMap<String, Uniform>,
 }
 
-impl Material for DefaultMaterial {
+impl Material for ColorMaterial {
     fn name(&self) -> &str {
-        "DefaultMaterial"
+        "ColorMaterial"
     }
 
     fn vertex_shader(&self) -> &str {
-        include_str!("shader/default/vert.glsl")
+        include_str!("shader/color/vert.glsl")
     }
 
     fn fragment_shader(&self) -> &str {
-        include_str!("shader/default/frag.glsl")
+        include_str!("shader/color/frag.glsl")
     }
 
     fn set_shader(&mut self, shader: Shader) {

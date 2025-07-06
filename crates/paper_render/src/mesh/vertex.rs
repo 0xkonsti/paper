@@ -1,3 +1,5 @@
+use std::hash::Hash;
+
 use log::error;
 
 use crate::{AttributeType, COLOR_SIZE, DEFAULT_COLOR, DEFAULT_POSITION, POSITION_SIZE};
@@ -51,5 +53,24 @@ impl Vertex {
 impl Default for Vertex {
     fn default() -> Self {
         Self { position: DEFAULT_POSITION, color: DEFAULT_COLOR, custom: Vec::new() }
+    }
+}
+
+impl Hash for Vertex {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        for value in &self.position {
+            value.to_bits().hash(state);
+        }
+
+        for value in &self.color {
+            value.to_bits().hash(state);
+        }
+
+        for (name, data) in &self.custom {
+            name.hash(state);
+            for value in data {
+                value.to_bits().hash(state);
+            }
+        }
     }
 }

@@ -27,7 +27,7 @@ glfw = { workspace = true }
 glad-gl = { workspace = true }
 log = { workspace = true }
 env_logger = { workspace = true }
-hashbrown = "0.15"
+hashbrown = { workspace = true }
 uuid = { version = "1", features = ["v4"] }
 
 [dev-dependencies]

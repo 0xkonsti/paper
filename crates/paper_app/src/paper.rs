@@ -5,8 +5,8 @@ use hashbrown::HashMap;
 use log::{debug, error, info};
 use paper_color::DEEP_BLUE;
 use paper_input::Event;
-use paper_math::{Transform, Vec2};
-use paper_render::{InternalMesh, Material, Mesh, Shader, ShaderUniform};
+use paper_math::Vec2;
+use paper_render::{ColorMaterial, DefaultMaterial, InternalMesh, Material, Mesh, Shader, ShaderUniform};
 use paper_utils::default;
 use paper_window::{Window, prelude::WindowConfig};
 
@@ -36,10 +36,11 @@ pub struct Paper<T: PaperApp = EmptyApp> {
     event_callbacks:  HashMap<Event, Vec<EventCallback<T>>>,
     current_events:   Vec<Event>,
 
-    entities: HashMap<EntityId, Entity>,
+    entities: HashMap<EntityId, (Entity, Vec<(String, ShaderUniform)>)>,
 
     pub(crate) meshes:    HashMap<MeshId, InternalMesh>,
     pub(crate) materials: HashMap<MaterialId, Box<dyn Material>>,
+    // material_name_map:    HashMap<String, MaterialId>,
 }
 
 impl<T: PaperApp> Paper<T> {
@@ -166,7 +167,11 @@ impl<T: PaperApp> Paper<T> {
     }
 
     pub fn add_mesh(&mut self, mesh: Mesh) -> MeshId {
-        let mesh_id = MeshId::new();
+        let mesh_id = MeshId::new(&mesh);
+        if self.meshes.contains_key(&mesh_id) {
+            debug!("Mesh with ID {mesh_id:?} already exists, returning existing mesh ID");
+            return mesh_id;
+        }
         let internal_mesh = InternalMesh::build(mesh);
         self.meshes.insert(mesh_id, internal_mesh);
         debug!("Added mesh with ID: {mesh_id:?}");
@@ -194,15 +199,25 @@ impl<T: PaperApp> Paper<T> {
         debug!("Set uniform '{name}' for material with ID: {material_id:?} = ({:?})", material.name());
     }
 
-    pub fn add_entity(&mut self, entity: Entity) -> EntityId {
+    pub fn add_entity(&mut self, mut entity: Entity) -> EntityId {
         let id = EntityId::new();
-        self.entities.insert(id, entity);
+        let uniforms = entity.uniforms();
+
+        if let Entity::Primitive { shape, .. } = entity {
+            let mesh = shape.mesh();
+            let mesh_id = self.add_mesh(mesh);
+            let material_id = self.add_material(ColorMaterial::default());
+            entity = Entity::MeshMaterial { mesh_id, material_id, transform: shape.transform() };
+            debug!("Transformed primitive entity into MeshMaterial");
+        }
+
+        self.entities.insert(id, (entity, uniforms));
         debug!("Added entity with ID: {id:?}");
         id
     }
 
     pub fn get_entity(&self, id: &EntityId) -> Option<&Entity> {
-        self.entities.get(id)
+        self.entities.get(id).map(|(entity, _)| entity)
     }
 
     pub fn remove_entity(&mut self, id: &EntityId) -> Option<Entity> {
@@ -214,7 +229,7 @@ impl<T: PaperApp> Paper<T> {
             debug!("Removed entity with ID: {id:?}");
         }
 
-        entity
+        entity.map(|(entity, _)| entity)
     }
 
     // ---------------< PRIVATE >---------------
@@ -224,8 +239,8 @@ impl<T: PaperApp> Paper<T> {
 
         let entities = self.entities.values().cloned().collect::<Vec<_>>();
 
-        for entity in entities {
-            entity.draw(self);
+        for (entity, uniforms) in entities {
+            entity.draw(self, uniforms);
         }
 
         self.window.p_window.swap_buffers();

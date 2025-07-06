@@ -16,7 +16,7 @@ paper_math = { path = "../paper_math", version = "0.1.0-dev" }
 # ------------< other >------------
 glad-gl = { workspace = true }
 log = { workspace = true }
-hashbrown = "0.15"
+hashbrown = { workspace = true }
 
 [dev-dependencies]
 
