@@ -16,7 +16,7 @@ pub enum Samples {
 }
 
 impl Samples {
-    pub(crate) fn to_glfw_samples(&self) -> Option<u32> {
+    pub(crate) fn glfw_samples(&self) -> Option<u32> {
         match self {
             Samples::None => None,
             Samples::X2 => Some(2),

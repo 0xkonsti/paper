@@ -38,6 +38,12 @@ pub struct MaterialId(uuid::Uuid);
 
 impl MaterialId {
     pub fn new() -> Self {
+        Self::default()
+    }
+}
+
+impl Default for MaterialId {
+    fn default() -> Self {
         MaterialId(uuid::Uuid::new_v4())
     }
 }
@@ -61,6 +67,12 @@ pub struct EntityId(uuid::Uuid);
 
 impl EntityId {
     pub fn new() -> Self {
+        Self::default()
+    }
+}
+
+impl Default for EntityId {
+    fn default() -> Self {
         EntityId(uuid::Uuid::new_v4())
     }
 }
@@ -121,7 +133,7 @@ impl Entity {
                 material.set_uniform(MODEL_UNIFORM, ShaderUniform::Mat4(transform.flatten()));
 
                 for (name, value) in uniforms {
-                    material.set_uniform(&name, value.clone());
+                    material.set_uniform(&name, value);
                 }
 
                 material.bind();
@@ -137,7 +149,7 @@ impl Entity {
         match self {
             Entity::MeshMaterial { .. } => Vec::new(),
             Entity::Primitive { color, .. } => {
-                return vec![("uColor".into(), ShaderUniform::Vec4(color.as_array()))];
+                vec![("uColor".into(), ShaderUniform::Vec4(color.as_array()))]
             }
         }
     }

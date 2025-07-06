@@ -16,7 +16,7 @@ pub trait Material {
     fn bind(&self);
 
     #[cfg(feature = "internal")]
-    fn from_source(&self) -> bool {
+    fn shaders_from_source(&self) -> bool {
         false
     }
 }

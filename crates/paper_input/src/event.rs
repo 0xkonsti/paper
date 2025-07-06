@@ -53,7 +53,7 @@ impl From<glfw::WindowEvent> for Event {
             glfw::WindowEvent::Pos(x, y) => Self::WindowPos(x, y),
             glfw::WindowEvent::Size(width, height) => Self::WindowSize(width, height),
             _ => {
-                warn!("Unhandled window event: {:?}", event);
+                warn!("Unhandled window event: {event:?}");
                 Self::Close
             }
         }

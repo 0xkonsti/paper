@@ -46,7 +46,7 @@ impl Material for ColorMaterial {
     }
 
     #[cfg(feature = "internal")]
-    fn from_source(&self) -> bool {
+    fn shaders_from_source(&self) -> bool {
         true
     }
 }

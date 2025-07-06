@@ -108,26 +108,26 @@ impl Shape2D {
     }
 }
 
-impl Into<Mesh> for Shape2D {
-    fn into(self) -> Mesh {
-        self.mesh()
+impl From<Shape2D> for Mesh {
+    fn from(shape: Shape2D) -> Self {
+        shape.mesh()
     }
 }
 
-impl Into<Mesh> for &Shape2D {
-    fn into(self) -> Mesh {
-        self.mesh()
+impl From<&Shape2D> for Mesh {
+    fn from(shape: &Shape2D) -> Self {
+        shape.mesh()
     }
 }
 
-impl Into<Transform> for Shape2D {
-    fn into(self) -> Transform {
-        self.transform()
+impl From<Shape2D> for Transform {
+    fn from(shape: Shape2D) -> Self {
+        shape.transform()
     }
 }
 
-impl Into<Transform> for &Shape2D {
-    fn into(self) -> Transform {
-        self.transform()
+impl From<&Shape2D> for Transform {
+    fn from(shape: &Shape2D) -> Self {
+        shape.transform()
     }
 }

@@ -35,7 +35,7 @@ impl Window {
         glfw.window_hint(glfw::WindowHint::ContextVersion(4, 6));
         glfw.window_hint(glfw::WindowHint::OpenGlProfile(glfw::OpenGlProfileHint::Core));
         glfw.window_hint(glfw::WindowHint::Resizable(config.resizable));
-        glfw.window_hint(glfw::WindowHint::Samples(config.samples.to_glfw_samples()));
+        glfw.window_hint(glfw::WindowHint::Samples(config.samples.glfw_samples()));
 
         debug!("Creating GLFW window");
 

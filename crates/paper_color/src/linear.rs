@@ -23,9 +23,9 @@ impl LinearRgba {
     }
 }
 
-impl Into<[f32; 4]> for LinearRgba {
-    fn into(self) -> [f32; 4] {
-        self.as_array()
+impl From<LinearRgba> for [f32; 4] {
+    fn from(color: LinearRgba) -> Self {
+        color.as_array()
     }
 }
 

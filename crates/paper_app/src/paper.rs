@@ -6,7 +6,7 @@ use log::{debug, error, info};
 use paper_color::DEEP_BLUE;
 use paper_input::Event;
 use paper_math::Vec2;
-use paper_render::{ColorMaterial, DefaultMaterial, InternalMesh, Material, Mesh, Shader, ShaderUniform};
+use paper_render::{ColorMaterial, InternalMesh, Material, Mesh, Shader, ShaderUniform};
 use paper_utils::default;
 use paper_window::{Window, prelude::WindowConfig};
 
@@ -87,7 +87,7 @@ impl<T: PaperApp> Paper<T> {
 
         app.setup(Commands::new(self));
 
-        let frame_time = self.max_fps.map_or(None, |fps| Some(1.0 / fps));
+        let frame_time = self.max_fps.map(|fps| 1.0 / fps);
         let mut last_frame = std::time::Instant::now();
         let mut delta_time = 0.0;
         let mut fixed_delta_time = 0.0;
@@ -180,7 +180,7 @@ impl<T: PaperApp> Paper<T> {
 
     pub fn add_material<M: Material + 'static>(&mut self, mut material: M) -> MaterialId {
         let material_id = MaterialId::new();
-        if material.from_source() {
+        if material.shaders_from_source() {
             material.set_shader(Shader::from_source(material.vertex_shader(), material.fragment_shader()));
         } else {
             material.set_shader(Shader::new(material.vertex_shader(), material.fragment_shader()));
@@ -265,7 +265,7 @@ impl<T: PaperApp> Paper<T> {
                 _ => {}
             }
 
-            self.handle_event(&event, app);
+            self.handle_event(event, app);
         }
 
         app.event_handler(Commands::new(self), &events);

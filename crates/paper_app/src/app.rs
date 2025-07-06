@@ -10,7 +10,7 @@ pub trait PaperApp: Default {
 
     fn cleanup(&mut self, _cmd: Commands) {}
 
-    fn event_handler(&mut self, _cmd: Commands, _events: &Vec<Event>) {}
+    fn event_handler(&mut self, _cmd: Commands, _events: &[Event]) {}
 }
 
 pub struct EmptyApp;
