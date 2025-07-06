@@ -1,0 +1,37 @@
+[package]
+name = "paper_app"
+version = "0.1.0-dev"
+edition = "2024"
+description = "The paper application"
+keywords = ["paper"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/0xkonsti/paper"
+rust-version = "1.88.0"
+authors = ["Konstantin Opora <konstantinopora@gmail.com>"]
+
+[dependencies]
+# ------------< paper >------------
+paper_window = { path = "../paper_window", version = "0.1.0-dev", features = [
+    "internal",
+] }
+paper_input = { path = "../paper_input", version = "0.1.0-dev" }
+paper_math = { path = "../paper_math", version = "0.1.0-dev" }
+paper_utils = { path = "../paper_utils", version = "0.1.0-dev" }
+paper_color = { path = "../paper_color", version = "0.1.0-dev" }
+paper_render = { path = "../paper_render", version = "0.1.0-dev", features = [
+    "internal",
+] }
+
+# ------------< other >------------
+glfw = { workspace = true }
+glad-gl = { workspace = true }
+log = { workspace = true }
+env_logger = { workspace = true }
+hashbrown = "0.15"
+uuid = { version = "1", features = ["v4"] }
+
+[dev-dependencies]
+
+[lib]
+name = "paper_app"
+path = "src/lib.rs"

@@ -1,0 +1,22 @@
+[package]
+name = "paper_color"
+version = "0.1.0-dev"
+edition = "2024"
+description = "Color library for the Paper"
+keywords = ["paper"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/0xkonsti/paper"
+rust-version = "1.88.0"
+authors = ["Konstantin Opora <konstantinopora@gmail.com>"]
+
+[dependencies]
+# ------------< paper >------------
+paper_utils = { path = "../paper_utils", version = "0.1.0-dev" }
+
+# ------------< other >------------
+
+[dev-dependencies]
+
+[lib]
+name = "paper_color"
+path = "src/lib.rs"

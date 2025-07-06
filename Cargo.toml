@@ -1,0 +1,56 @@
+[package]
+name = "paper"
+version = "0.1.0-dev"
+edition = "2024"
+description = "A OpenGL based 2D application framework for Rust"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/0xkonsti/paper"
+categories = ["graphics", "rendering"]
+keywords = ["graphics", "opengl", "paper", "rendering"]
+rust-version = "1.88.0"
+authors = ["Konstantin Opora <konstantinopora@gmail.com>"]
+
+[dependencies]
+# ------------< paper >------------
+paper_app = { path = "crates/paper_app", version = "0.1.0-dev" }
+paper_utils = { path = "crates/paper_utils", version = "0.1.0-dev" }
+paper_window = { path = "crates/paper_window", version = "0.1.0-dev" }
+paper_math = { path = "crates/paper_math", version = "0.1.0-dev" }
+paper_input = { path = "crates/paper_input", version = "0.1.0-dev" }
+paper_color = { path = "crates/paper_color", version = "0.1.0-dev" }
+paper_render = { path = "crates/paper_render", version = "0.1.0-dev" }
+
+# ------------< other >------------
+log = { workspace = true }
+
+[lib]
+name = "paper"
+path = "src/lib.rs"
+
+[workspace]
+resolver = "2"
+members = [
+    "crates/glad-gl",
+    "crates/paper_app",
+    "crates/paper_utils",
+    "crates/paper_window",
+    "crates/paper_math",
+    "crates/paper_input",
+    "crates/paper_color",
+    "crates/paper_render",
+]
+
+[workspace.dependencies]
+glfw = "0.59"
+glad-gl = { path = "crates/glad-gl" }
+glam = "0.30"
+log = "0.4"
+env_logger = "0.11"
+
+[[example]]
+name = "hello"
+path = "examples/hello.rs"
+
+[[example]]
+name = "triangle"
+path = "examples/triangle.rs"

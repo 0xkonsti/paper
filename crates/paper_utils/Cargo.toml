@@ -1,0 +1,21 @@
+[package]
+name = "paper_utils"
+version = "0.1.0-dev"
+edition = "2024"
+description = "A utility library for paper"
+keywords = ["paper"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/0xkonsti/paper"
+rust-version = "1.88.0"
+authors = ["Konstantin Opora <konstantinopora@gmail.com>"]
+
+[dependencies]
+# ------------< paper >------------
+
+# ------------< other >------------
+
+[dev-dependencies]
+
+[lib]
+name = "paper_utils"
+path = "src/lib.rs"

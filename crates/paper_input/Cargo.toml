@@ -1,0 +1,23 @@
+[package]
+name = "paper_input"
+version = "0.1.0-dev"
+edition = "2024"
+description = "Input handling for paper"
+keywords = ["paper"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/0xkonsti/paper"
+rust-version = "1.88.0"
+authors = ["Konstantin Opora <konstantinopora@gmail.com>"]
+
+[dependencies]
+# ------------< paper >------------
+
+# ------------< other >------------
+glfw = { workspace = true }
+log = { workspace = true }
+
+[dev-dependencies]
+
+[lib]
+name = "paper_input"
+path = "src/lib.rs"

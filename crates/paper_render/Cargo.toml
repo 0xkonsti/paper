@@ -1,0 +1,28 @@
+[package]
+name = "paper_render"
+version = "0.1.0-dev"
+edition = "2024"
+description = "Rendering for paper"
+keywords = ["paper"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/0xkonsti/paper"
+rust-version = "1.88.0"
+authors = ["Konstantin Opora <konstantinopora@gmail.com>"]
+
+[dependencies]
+# ------------< paper >------------
+paper_math = { path = "../paper_math", version = "0.1.0-dev" }
+
+# ------------< other >------------
+glad-gl = { workspace = true }
+log = { workspace = true }
+hashbrown = "0.15"
+
+[dev-dependencies]
+
+[features]
+internal = []
+
+[lib]
+name = "paper_render"
+path = "src/lib.rs"
