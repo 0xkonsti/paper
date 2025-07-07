@@ -2,8 +2,13 @@ use paper_input::Event;
 
 use crate::commands::Commands;
 
-pub trait PaperApp: Default {
-    fn setup(&mut self, cmd: Commands);
+pub trait PaperApp {
+    fn new(cmd: Commands) -> Self
+    where
+        Self: Sized;
+
+    fn setup(&mut self, cmd: Commands) {}
+
     fn update(&mut self, cmd: Commands);
 
     fn fixed_update(&mut self, _cmd: Commands) {}
@@ -15,14 +20,10 @@ pub trait PaperApp: Default {
 
 pub struct EmptyApp;
 
-impl Default for EmptyApp {
-    fn default() -> Self {
-        Self
-    }
-}
-
 impl PaperApp for EmptyApp {
-    fn setup(&mut self, _cmd: Commands) {}
+    fn new(_cmd: Commands) -> Self {
+        Self {}
+    }
 
     fn update(&mut self, _cmd: Commands) {}
 }

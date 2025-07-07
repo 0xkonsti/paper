@@ -47,13 +47,34 @@ impl Transform {
         self
     }
 
+    pub fn translate(&mut self, translation: Vec3) -> &mut Self {
+        self.translation += translation;
+        self
+    }
+
     pub fn set_rotation(&mut self, rotation: Quat) -> &mut Self {
         self.rotation = rotation;
         self
     }
 
+    pub fn rotate(&mut self, rotation: Quat) -> &mut Self {
+        self.rotation *= rotation;
+        self
+    }
+
+    pub fn rotate_around(&mut self, axis: Vec3, angle: f32) -> &mut Self {
+        let rotation = Quat::from_axis_angle(axis, angle);
+        self.rotation *= rotation;
+        self
+    }
+
     pub fn set_scale(&mut self, scale: Vec3) -> &mut Self {
         self.scale = scale;
+        self
+    }
+
+    pub fn scale(&mut self, scale: Vec3) -> &mut Self {
+        self.scale *= scale;
         self
     }
 

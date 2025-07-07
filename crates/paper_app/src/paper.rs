@@ -5,7 +5,7 @@ use hashbrown::HashMap;
 use log::{debug, error, info};
 use paper_color::DEEP_BLUE;
 use paper_input::Event;
-use paper_math::Vec2;
+use paper_math::{Transform, Vec2};
 use paper_render::{ColorMaterial, InternalMesh, Material, Mesh, Shader, ShaderUniform};
 use paper_utils::default;
 use paper_window::{Window, prelude::WindowConfig};
@@ -83,7 +83,7 @@ impl<T: PaperApp> Paper<T> {
     }
 
     pub fn run(&mut self) {
-        let mut app = T::default();
+        let mut app = T::new(Commands::new(self));
 
         app.setup(Commands::new(self));
 
@@ -97,7 +97,7 @@ impl<T: PaperApp> Paper<T> {
         while !self.window.p_window.should_close() {
             let now = std::time::Instant::now();
             delta_time += now.duration_since(last_frame).as_secs_f64();
-            fixed_delta_time += delta_time;
+            fixed_delta_time += now.duration_since(last_frame).as_secs_f64();
             last_frame = now;
 
             self.window.glfw.poll_events();
@@ -119,6 +119,9 @@ impl<T: PaperApp> Paper<T> {
 
                 self.delta_time = delta_time;
                 delta_time -= frame_time;
+            } else {
+                self.delta_time = delta_time;
+                delta_time = 0.0;
             }
 
             app.update(Commands::new(self));
@@ -220,16 +223,24 @@ impl<T: PaperApp> Paper<T> {
         self.entities.get(id).map(|(entity, _)| entity)
     }
 
-    pub fn remove_entity(&mut self, id: &EntityId) -> Option<Entity> {
-        let entity = self.entities.remove(id);
+    pub fn remove_entity(&mut self, id: EntityId) -> Option<Entity> {
+        let entity = self.entities.remove(&id);
 
-        if self.entities.remove(id).is_none() {
+        if self.entities.remove(&id).is_none() {
             error!("Failed to remove entity with ID: {id:?} (not found)");
         } else {
             debug!("Removed entity with ID: {id:?}");
         }
 
         entity.map(|(entity, _)| entity)
+    }
+
+    pub fn get_entity_transform(&self, id: &EntityId) -> Option<&Transform> {
+        self.entities.get(id).map(|(entity, _)| entity.transform())
+    }
+
+    pub fn get_entity_transform_mut(&mut self, id: &EntityId) -> Option<&mut Transform> {
+        self.entities.get_mut(id).map(|(entity, _)| entity.transform_mut())
     }
 
     // ---------------< PRIVATE >---------------
@@ -306,7 +317,7 @@ impl<T: PaperApp> Debug for Paper<T> {
     }
 }
 
-impl Default for Paper {
+impl<T: PaperApp> Default for Paper<T> {
     fn default() -> Self {
         Self::new(&WindowConfig::default())
     }
@@ -320,5 +331,48 @@ impl<T: PaperApp> Commandable for Paper<T> {
 
     fn events(&self) -> &Vec<Event> {
         &self.current_events
+    }
+
+    fn delta_time(&self) -> f32 {
+        self.delta_time as f32
+    }
+
+    fn fixed_delta_time(&self) -> f32 {
+        self.fixed_delta_time as f32
+    }
+
+    fn add_mesh(&mut self, mesh: Mesh) -> MeshId {
+        self.add_mesh(mesh)
+    }
+
+    fn add_material(&mut self, material: Box<dyn Material>) -> MaterialId {
+        self.add_material(material)
+    }
+
+    fn add_entity(&mut self, entity: Entity) -> EntityId {
+        self.add_entity(entity)
+    }
+
+    fn remove_entity(&mut self, entity_id: EntityId) -> Option<Entity> {
+        self.remove_entity(entity_id)
+    }
+
+    fn set_material_uniform(&mut self, material_id: MaterialId, name: &str, value: ShaderUniform) {
+        self.set_material_uniform(material_id, name, value);
+    }
+
+    fn get_entity_transform(&self, id: &EntityId) -> Option<&Transform> {
+        self.get_entity_transform(id)
+    }
+
+    fn get_entity_transform_mut(&mut self, id: &EntityId) -> Option<&mut Transform> {
+        self.get_entity_transform_mut(id)
+    }
+
+    fn set_entity_transform(&mut self, id: &EntityId, transform: Transform) {
+        if let Some(entity) = self.entities.get_mut(id) {
+            let entity_transform = entity.0.transform_mut();
+            *entity_transform = transform;
+        }
     }
 }

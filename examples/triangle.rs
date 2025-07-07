@@ -1,7 +1,7 @@
 pub use paper::prelude::*;
 
 fn main() {
-    let mut app = Paper::default().with_event_callback(Key::Escape.press(), |mut cmd, _| {
+    let mut app = Paper::<EmptyApp>::default().with_event_callback(Key::Escape.press(), |mut cmd, _| {
         cmd.close();
     });
 
