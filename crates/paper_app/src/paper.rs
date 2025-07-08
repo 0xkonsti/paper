@@ -36,7 +36,8 @@ pub struct Paper<T: PaperApp = EmptyApp> {
     event_callbacks:  HashMap<Event, Vec<EventCallback<T>>>,
     current_events:   Vec<Event>,
 
-    entities: HashMap<EntityId, (Entity, Vec<(String, ShaderUniform)>)>,
+    entities_map: HashMap<EntityId, usize>,
+    entities:     Vec<(EntityId, Entity, Vec<(String, ShaderUniform)>)>,
 
     pub(crate) meshes:    HashMap<MeshId, InternalMesh>,
     pub(crate) materials: HashMap<MaterialId, Box<dyn Material>>,
@@ -75,7 +76,8 @@ impl<T: PaperApp> Paper<T> {
             event_callbacks: HashMap::new(),
             current_events: Vec::new(),
 
-            entities: HashMap::new(),
+            entities_map: HashMap::new(),
+            entities: Vec::new(),
 
             meshes: HashMap::new(),
             materials: HashMap::new(),
@@ -214,33 +216,41 @@ impl<T: PaperApp> Paper<T> {
             debug!("Transformed primitive entity into MeshMaterial");
         }
 
-        self.entities.insert(id, (entity, uniforms));
+        self.entities.push((id, entity, uniforms));
+        self.entities_map.insert(id, self.entities.len() - 1);
         debug!("Added entity with ID: {id:?}");
         id
     }
 
     pub fn get_entity(&self, id: &EntityId) -> Option<&Entity> {
-        self.entities.get(id).map(|(entity, _)| entity)
+        self.entities_map.get(id).map(|index| &self.entities[*index].1)
     }
 
     pub fn remove_entity(&mut self, id: EntityId) -> Option<Entity> {
-        let entity = self.entities.remove(&id);
+        let entity_index = self.entities_map.remove(&id);
 
-        if self.entities.remove(&id).is_none() {
+        let Some(index) = entity_index else {
             error!("Failed to remove entity with ID: {id:?} (not found)");
-        } else {
-            debug!("Removed entity with ID: {id:?}");
+            return None;
+        };
+
+        let (_, entity, _) = self.entities.remove(index);
+
+        for i in index..self.entities.len() {
+            let id = self.entities[i].0;
+            *self.entities_map.get_mut(&id).unwrap() = i;
         }
 
-        entity.map(|(entity, _)| entity)
+        debug!("Removed entity with ID: {id:?}");
+        Some(entity)
     }
 
     pub fn get_entity_transform(&self, id: &EntityId) -> Option<&Transform> {
-        self.entities.get(id).map(|(entity, _)| entity.transform())
+        self.entities_map.get(id).map(|index| self.entities[*index].1.transform())
     }
 
     pub fn get_entity_transform_mut(&mut self, id: &EntityId) -> Option<&mut Transform> {
-        self.entities.get_mut(id).map(|(entity, _)| entity.transform_mut())
+        self.entities_map.get(id).map(|index| self.entities[*index].1.transform_mut())
     }
 
     // ---------------< PRIVATE >---------------
@@ -248,11 +258,13 @@ impl<T: PaperApp> Paper<T> {
     fn render(&mut self) {
         self.window.clear();
 
-        let entities = self.entities.values().cloned().collect::<Vec<_>>();
+        let temp_entities = std::mem::take(&mut self.entities);
 
-        for (entity, uniforms) in entities {
-            entity.draw(self, uniforms);
+        for (_, entity, uniforms) in &temp_entities {
+            entity.draw(self, uniforms.clone());
         }
+
+        self.entities = temp_entities;
 
         self.window.p_window.swap_buffers();
     }
@@ -370,8 +382,8 @@ impl<T: PaperApp> Commandable for Paper<T> {
     }
 
     fn set_entity_transform(&mut self, id: &EntityId, transform: Transform) {
-        if let Some(entity) = self.entities.get_mut(id) {
-            let entity_transform = entity.0.transform_mut();
+        if let Some(index) = self.entities_map.get_mut(id) {
+            let entity_transform = self.entities[*index].1.transform_mut();
             *entity_transform = transform;
         }
     }
